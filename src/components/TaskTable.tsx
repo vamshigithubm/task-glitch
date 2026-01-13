@@ -1,3 +1,7 @@
+type TaskFormValue =
+  | ({ id: string } & Omit<Task, "id" | "createdAt" | "completedAt">)
+  | Omit<Task, "id" | "createdAt" | "completedAt">;
+
 import { useMemo, useState } from "react";
 import {
   Box,
@@ -45,8 +49,8 @@ export default function TaskTable({ tasks, onAdd, onUpdate, onDelete }: Props) {
     setOpenForm(true);
   };
 
-  const handleSubmit = (value: Omit<Task, "id"> & { id?: string }) => {
-    if (value.id) {
+  const handleSubmit = (value: TaskFormValue) => {
+    if ('id' in value) {
       const { id, ...rest } = value as Task;
       onUpdate(id, rest);
     } else {
